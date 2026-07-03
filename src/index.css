@@ -1,0 +1,218 @@
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300..700&family=Inter:wght@300..700&family=JetBrains+Mono:wght@300..600&display=swap');
+@import "tailwindcss";
+
+/* ---------- Design tokens ----------
+   Palette (orbital-vision theme, tying CV research + cosmos):
+   --bg:        #05060B  near-black void
+   --bg-alt:    #0B0E17  panel background
+   --violet:    #6C5CE7  accent-primary (nebula violet)
+   --cyan:      #22D3EE  accent-secondary (satellite cyan)
+   --text:      #E9EAF0  primary text
+   --muted:     #8B90A6  secondary text
+------------------------------------- */
+:root {
+  --bg: #05060b;
+  --bg-alt: #0b0e17;
+  --violet: #6c5ce7;
+  --cyan: #22d3ee;
+  --text: #e9eaf0;
+  --muted: #8b90a6;
+
+  --font-display: "Space Grotesk", sans-serif;
+  --font-body: "Inter", sans-serif;
+  --font-mono: "JetBrains Mono", monospace;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-body);
+  overflow-x: hidden;
+  cursor: none;
+}
+
+@media (hover: none) {
+  body {
+    cursor: auto;
+  }
+}
+
+a,
+button {
+  font-family: inherit;
+}
+
+::selection {
+  background: var(--violet);
+  color: white;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+.font-display {
+  font-family: var(--font-display);
+}
+.font-mono {
+  font-family: var(--font-mono);
+}
+
+:focus-visible {
+  outline: 2px solid var(--cyan);
+  outline-offset: 3px;
+}
+
+/* ShinyText sweep */
+.shiny-text {
+  background: linear-gradient(
+    100deg,
+    var(--muted) 30%,
+    var(--text) 45%,
+    #ffffff 50%,
+    var(--text) 55%,
+    var(--muted) 70%
+  );
+  background-size: 220% 100%;
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+  animation: shiny-sweep var(--shiny-duration, 3.5s) linear infinite;
+}
+
+@keyframes shiny-sweep {
+  0% {
+    background-position: 120% 0;
+  }
+  100% {
+    background-position: -20% 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .shiny-text {
+    animation: none;
+    background-position: 0 0;
+  }
+}
+
+@keyframes logo-loop {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  [style*="logo-loop"] {
+    animation: none !important;
+  }
+}
+
+@keyframes electric-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  [style*="electric-spin"] {
+    animation: none !important;
+  }
+}
+
+.glass-hover {
+  transition: background 0.35s ease, border-color 0.35s ease, transform 0.35s ease,
+    box-shadow 0.35s ease;
+}
+.glass-hover:hover {
+  background: rgba(255, 255, 255, 0.07) !important;
+  border-color: rgba(34, 211, 238, 0.35);
+  transform: translateY(-3px);
+  box-shadow: 0 20px 60px -20px rgba(108, 92, 231, 0.45);
+}
+/* ---------- Canvas Electric Border Styles ---------- */
+.electric-border {
+  position: relative;
+  border-radius: inherit;
+  overflow: visible;
+  isolation: isolate;
+}
+
+.eb-canvas-container {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  z-index: 2;
+}
+
+.eb-canvas {
+  display: block;
+}
+
+.eb-content {
+  position: relative;
+  border-radius: inherit;
+  z-index: 1;
+  height: 100%;
+}
+
+.eb-layers {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.eb-glow-1,
+.eb-glow-2 {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  box-sizing: border-box;
+}
+
+.eb-glow-1 {
+  border: 1.5px solid var(--electric-border-color);
+  opacity: 0.15;
+  filter: blur(1px);
+}
+
+.eb-glow-2 {
+  border: 2px solid var(--electric-border-color);
+  opacity: 0.3;
+  filter: blur(6px);
+}
+/* Force hide the default hand cursor on all interactive components */
+a, 
+button, 
+input, 
+textarea, 
+select,
+.cursor-target {
+  cursor: none !important;
+}
