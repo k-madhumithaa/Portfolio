@@ -1,16 +1,34 @@
-# React + Vite
+# Orbit Vision — Interactive AI & Computer Vision Portfolio
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
+A state-of-the-art, cosmos-themed developer portfolio built on **React 19**, **Vite 8**, and **Tailwind CSS v4**. The application balances a deep space aesthetic with high-performance visual mechanics, mathematical physics wrappers, and zero-dependency canvas rendering engines.
 
-Currently, two official plugins are available:
+## 🌌 Core Features
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+- **Interactive Dynamic Reticle Cursors**: A canvas-calculated pointer replacement featuring fluid trailing particles and context-aware bounding brackets (`.cursor-target`) that lock cleanly onto interactive objects.
+- **Organic Electric Canvas Borders**: High-frequency canvas distortion math running octaved noise configurations to wrap container components in a live, glowing boundary.
+- **Orbital Trajectory Education Path**: An upward-climbing academic roadmap mapping viewport window coordinates to track a descending gradient light beam as users scroll past milestones.
+- **3D Pedestal Presentation Node**: Integrated `<model-viewer>` configuration with unrestricted pan, tilt, and scroll zoom thresholds centered over a blurred radial nebula glow.
+- **Serverless Concurrent Forms**: Completely backendless form transmission connecting secure database recording on **Supabase (PostgreSQL)** alongside instant background email notification dispatch via **EmailJS**.
+- **Terminal Terminal Scramble Effects**: Intersectional text reveals displaying real-time text scrambling and localized CSS gradient sheen loop sweeps.
 
-## React Compiler
+## 🛠️ Tech Stack & Ecosystem
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- **Framework Core**: React 19 (Fiber Rendering Engine Architecture)
+- **Compilation Tooling**: Vite 8 + Oxlint (Ultra-high-performance code parsing)
+- **Styling Architecture**: Tailwind CSS v4 (Modern native CSS design tokens)
+- **Animation Layer**: Framer Motion
+- **Database Architecture**: Supabase Serverless BaaS (PostgreSQL)
+- **Notification Engine**: EmailJS Client Integration Toolkit
 
-## Expanding the Oxlint configuration
+## 📂 Project Architecture
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and Oxlint's TypeScript related rules in your project.
+```text
+src/
+├── components/
+│   ├── effects/    # Physics hooks, custom canvas modules, visual shaders
+│   ├── layout/     # Structural boundaries (Navbar, Footer wrapper grids)
+│   └── sections/   # Display blocks (Hero, Education, Skills, Projects, Contact)
+├── config/         # Initialization parameters for serverless client APIs
+├── data/           # Structured portfolio configuration manifest data maps
+└── pages/          # Fallback client-side single-page routing contexts
+```
