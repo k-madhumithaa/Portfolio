@@ -3,12 +3,12 @@ import { motion, useMotionValue, useSpring } from "framer-motion";
 
 export default function CustomCursor() {
   const [isTouch, setIsTouch] = useState(false);
-  const [target, setTarget] = useState(null); 
+  const [target, setTarget] = useState(null);
   const [isDown, setIsDown] = useState(false);
 
   const x = useMotionValue(-100);
   const y = useMotionValue(-100);
-  
+
   const springX = useSpring(x, { stiffness: 280, damping: 28, mass: 0.4 });
   const springY = useSpring(y, { stiffness: 280, damping: 28, mass: 0.4 });
 
@@ -22,7 +22,7 @@ export default function CustomCursor() {
   const clicksRef = useRef([]);
   const bubblesRef = useRef([]);
 
-  const sparkColor = '#22D3EE'; 
+  const sparkColor = "#22D3EE";
   const sparkSize = 14;
   const sparkRadius = 35;
   const sparkCount = 8;
@@ -38,23 +38,26 @@ export default function CustomCursor() {
 
     const canvas = canvasRef.current;
     if (!canvas) return;
-    const ctx = canvas.getContext('2d');
+
+    const ctx = canvas.getContext("2d");
     let animationId;
 
     const resizeCanvas = () => {
       canvas.width = window.innerWidth;
       canvas.height = window.innerHeight;
     };
+
     resizeCanvas();
     window.addEventListener("resize", resizeCanvas);
 
     const renderFX = (timestamp) => {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-      // sparks
+      // ---------------- Sparks ----------------
       clicksRef.current = clicksRef.current.filter((group) => {
         const elapsed = timestamp - group.startTime;
         if (elapsed >= sparkDuration) return false;
+
         const progress = elapsed / sparkDuration;
         const eased = easeOutQuad(progress);
         const distance = eased * sparkRadius;
@@ -62,42 +65,56 @@ export default function CustomCursor() {
 
         for (let i = 0; i < group.count; i++) {
           const angle = (2 * Math.PI * i) / group.count;
+
           const x1 = group.x + distance * Math.cos(angle);
           const y1 = group.y + distance * Math.sin(angle);
-          const x2 = group.x + (distance + currentLineLength) * Math.cos(angle);
-          const y2 = group.y + (distance + currentLineLength) * Math.sin(angle);
+
+          const x2 =
+            group.x + (distance + currentLineLength) * Math.cos(angle);
+          const y2 =
+            group.y + (distance + currentLineLength) * Math.sin(angle);
+
           ctx.strokeStyle = sparkColor;
           ctx.lineWidth = 2;
-          ctx.lineCap = 'round';
+          ctx.lineCap = "round";
+
           ctx.beginPath();
           ctx.moveTo(x1, y1);
           ctx.lineTo(x2, y2);
           ctx.stroke();
         }
+
         return true;
       });
 
-      // bubbles
+      // ---------------- Bubbles ----------------
       bubblesRef.current = bubblesRef.current.filter((b) => {
         const elapsed = timestamp - b.startTime;
+
         if (elapsed >= b.life) return false;
+
         const progress = elapsed / b.life;
         const currentRadius = b.maxRadius * (1 - progress * 0.5);
         const opacity = b.maxAlpha * (1 - progress);
-        b.y -= 0.25; 
+
+        b.y -= 0.25;
         b.x += b.vx;
-        ctx.fillStyle = `rgba(108, 92, 231, ${opacity * 0.4})`; 
-        ctx.strokeStyle = `rgba(34, 211, 238, ${opacity * 0.8})`; 
+
+        ctx.fillStyle = `rgba(108, 92, 231, ${opacity * 0.4})`;
+        ctx.strokeStyle = `rgba(34, 211, 238, ${opacity * 0.8})`;
         ctx.lineWidth = 1;
+
         ctx.beginPath();
         ctx.arc(b.x, b.y, currentRadius, 0, Math.PI * 2);
         ctx.fill();
         ctx.stroke();
+
         return true;
       });
 
       animationId = requestAnimationFrame(renderFX);
     };
+
     animationId = requestAnimationFrame(renderFX);
 
     const move = (e) => {
@@ -112,18 +129,21 @@ export default function CustomCursor() {
           maxRadius: Math.random() * 5 + 3,
           maxAlpha: Math.random() * 0.5 + 0.3,
           startTime: performance.now(),
-          life: Math.random() * 250 + 200
+          life: Math.random() * 250 + 200,
         });
       }
 
       const el = e.target.closest(".cursor-target");
+
       if (el) {
         const r = el.getBoundingClientRect();
         const pad = Number(el.dataset.cursorPad || 8);
+
         tX.set(r.left - pad);
         tY.set(r.top - pad);
         tW.set(r.width + pad * 2);
         tH.set(r.height + pad * 2);
+
         setTarget(true);
       } else {
         setTarget(null);
@@ -132,19 +152,40 @@ export default function CustomCursor() {
 
     const down = (e) => {
       setIsDown(true);
-      clicksRef.current.push({ x: e.clientX, y: e.clientY, count: sparkCount, startTime: performance.now() });
+
+      clicksRef.current.push({
+        x: e.clientX,
+        y: e.clientY,
+        count: sparkCount,
+        startTime: performance.now(),
+      });
     };
+
     const up = () => setIsDown(false);
+
+    // Hide target brackets immediately while scrolling
+    const handleScroll = () => {
+      setTarget(null);
+
+      // Move the reticle off-screen so it disappears instantly
+      tX.set(-100);
+      tY.set(-100);
+      tW.set(24);
+      tH.set(24);
+    };
 
     window.addEventListener("pointermove", move);
     window.addEventListener("pointerdown", down);
     window.addEventListener("pointerup", up);
+    window.addEventListener("scroll", handleScroll, { passive: true });
 
     return () => {
       window.removeEventListener("pointermove", move);
       window.removeEventListener("pointerdown", down);
       window.removeEventListener("pointerup", up);
+      window.removeEventListener("scroll", handleScroll);
       window.removeEventListener("resize", resizeCanvas);
+
       cancelAnimationFrame(animationId);
     };
   }, [x, y, tX, tY, tW, tH, easeOutQuad]);
@@ -152,10 +193,16 @@ export default function CustomCursor() {
   if (isTouch) return null;
 
   return (
-    <div className="pointer-events-none fixed inset-0 z-[999]" aria-hidden="true">
-      <canvas ref={canvasRef} className="absolute inset-0 h-full w-full block" />
+    <div
+      className="pointer-events-none fixed inset-0 z-[999]"
+      aria-hidden="true"
+    >
+      <canvas
+        ref={canvasRef}
+        className="absolute inset-0 h-full w-full block"
+      />
 
-      {/* Main outer glow track ring - stays visible as a sleek focal spot when locked over buttons */}
+      {/* Main Cursor Glow */}
       <motion.div
         className="absolute rounded-full"
         style={{
@@ -163,17 +210,18 @@ export default function CustomCursor() {
           top: springY,
           x: "-50%",
           y: "-50%",
-          width: target ? 16 : isDown ? 50 : 80, 
+          width: target ? 16 : isDown ? 50 : 80,
           height: target ? 16 : isDown ? 50 : 80,
-          background: target 
+          background: target
             ? "radial-gradient(circle, rgba(34,211,238,0.8) 0%, rgba(34,211,238,0.2) 60%, transparent 100%)"
             : "radial-gradient(circle, rgba(108,92,231,0.45) 0%, rgba(34,211,238,0.2) 55%, rgba(34,211,238,0) 75%)",
           filter: target ? "none" : "blur(6px)",
-          transition: "width 0.2s cubic-bezier(0.25, 1, 0.5, 1), height 0.2s cubic-bezier(0.25, 1, 0.5, 1)",
+          transition:
+            "width 0.2s cubic-bezier(0.25, 1, 0.5, 1), height 0.2s cubic-bezier(0.25, 1, 0.5, 1)",
         }}
       />
-      
-      {/* Central focus alignment point */}
+
+      {/* Cursor Dot */}
       <motion.div
         className="absolute rounded-full bg-[var(--cyan)]"
         style={{
@@ -186,10 +234,17 @@ export default function CustomCursor() {
         }}
       />
 
-      {/* Target Reticle Brackets */}
+      {/* Target Reticle */}
       <motion.div
         className="absolute"
-        style={{ left: tX, top: tY, width: tW, height: tH, opacity: target ? 1 : 0, transition: "opacity 0.2s ease" }}
+        style={{
+          left: tX,
+          top: tY,
+          width: tW,
+          height: tH,
+          opacity: target ? 1 : 0,
+          transition: "opacity 0.2s ease",
+        }}
       >
         {[
           "top-0 left-0 border-t-2 border-l-2",
@@ -197,7 +252,10 @@ export default function CustomCursor() {
           "bottom-0 left-0 border-b-2 border-l-2",
           "bottom-0 right-0 border-b-2 border-r-2",
         ].map((pos, i) => (
-          <span key={i} className={`absolute h-3 w-3 ${pos} border-[var(--cyan)] rounded-[2px]`} />
+          <span
+            key={i}
+            className={`absolute h-3 w-3 ${pos} border-[var(--cyan)] rounded-[2px]`}
+          />
         ))}
       </motion.div>
     </div>
