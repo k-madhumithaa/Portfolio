@@ -8,6 +8,7 @@ export const profile = {
   phone: "+91 8310370296",
   linkedin: "https://linkedin.com/in/k-madhumitha-40b920295",
   github: "https://github.com/k-madhumithaa",
+  resumeUrl: "/resume/K_Madhumitha_Resume.pdf",
   rotatingRoles: [
     "Full-Stack Developer",
     "Computer Vision Researcher",
